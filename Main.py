@@ -2,6 +2,7 @@ import cv2
 import numpy as np
 
 # Initialize video capture
+# If using external camera then change the value to cv2.VideoCapture(1)
 cap = cv2.VideoCapture(0)
 
 # Define initial bounding box values (adjust as needed)
@@ -16,7 +17,7 @@ kernel_size = 1
 # Define the height of the bounding box in meters (adjust as needed)
 bbox_height_meters = 2.0
 
-# Define the low and high level thresholds
+# Define the low and high level thresholds (adjust as needed)
 low_level_threshold = 0.2  # meters
 high_level_threshold = 1.6  # meters
 
@@ -40,7 +41,7 @@ while True:
     # Blur the grayscale image for better edge detection
     blurred = cv2.GaussianBlur(gray, (5, 5), 0)
 
-    # Apply Canny edge detection to the blurred image to detect the edges
+    # Apply Canny edge detection to the blurred image to detect the edges and can adjust the threshold
     edges = cv2.Canny(image=blurred, threshold1=55, threshold2=70)
 
     # Define the kernel for morphological operations
