@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Smart Water Levelling</title>
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #faebd7;
+            font-family: Arial, sans-serif;
+        }
+        h1 {
+            margin-bottom: 10px;
+            color: #333;
+        }
+        h2 {
+            margin-bottom: 20px;
+            color: #333;
+        }
+        img {
+            max-width: 100%;
+            height: auto;
+            border: 5px solid #333;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+        }
+        .top-left-image {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            width: 100px;
+            height: auto;
+        }
+        .video-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+        }
+        .alert-message {
+            position: absolute;
+            right: 20px;
+            top: 20px;
+            padding: 10px;
+            background-color: rgba(255, 69, 69, 0.8);
+            border: 1px solid #333;
+            border-radius: 4px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <img src="static/utm.png" alt="Top left Image" class="top-left-image">
+    <h1>Smart Water Levelling</h1>
+    <h2>By: Adrin Haziq Bin Azrizal</h2>
+    <div class="video-container">
+        <img id="videoFrame" src="" alt="Video Frame">
+    </div>
+    <div id="alertMessage" class="alert-message"></div>
+    <script>
+        const videoFrameImage = document.getElementById('videoFrame');
+        const alertMessageDiv = document.getElementById('alertMessage');
+        const webSocket = new WebSocket('ws://localhost:8000/ws');
+        webSocket.binaryType = 'arraybuffer';
+        webSocket.onmessage = (event) => {
+            const data = new Uint8Array(event.data);
+            const alertMessage = String.fromCharCode(...data.slice(0, data.indexOf(0)));
+            const binaryData = data.slice(data.indexOf(0) + 1);
+            const blob = new Blob([binaryData], { type: 'image/jpeg' });
+            const url = URL.createObjectURL(blob);
+            videoFrameImage.src = url;
+            alertMessageDiv.textContent = alertMessage;
+        };
+    </script>
+</body>
+</html>
